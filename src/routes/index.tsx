@@ -296,14 +296,18 @@ function Index() {
 
         <section id="services" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>I can help you with</SectionTitle>
-            <div className="mt-14 grid gap-px overflow-hidden border-border md:grid-cols-3 lg:grid-cols-5">
-              {SERVICES.map((s) => (
-                <div key={s.n} className="border-l border-border px-5 py-2 first:border-l-0">
-                  <p className="font-display text-4xl text-muted-foreground/25">{s.n}</p>
-                  <h3 className="mt-5 text-base font-semibold">{s.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
-                </div>
+            <SectionTitle eyebrow="Services">I can help you with</SectionTitle>
+            <div className="mt-14 grid gap-4 md:grid-cols-3 lg:grid-cols-5">
+              {SERVICES.map((s, i) => (
+                <Reveal key={s.n} delay={i * 80}>
+                  <div className="group hover-lift h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
+                    <p className="font-display text-4xl text-muted-foreground/25 transition-colors group-hover:text-accent/70">
+                      {s.n}
+                    </p>
+                    <h3 className="mt-5 text-base font-semibold">{s.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -311,9 +315,9 @@ function Index() {
 
         <section id="about" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Turning data into decisions</SectionTitle>
+            <SectionTitle eyebrow="About">Turning data into decisions</SectionTitle>
             <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:items-center">
-              <div>
+              <Reveal>
                 <p className="text-lg leading-relaxed text-muted-foreground">
                   I’m a Data Analyst who loves solving data puzzles — extracting structured datasets
                   with SQL Server, manipulating raw files with Python, and validating trends with
@@ -322,20 +326,21 @@ function Index() {
                   challenges.
                 </p>
                 <div className="mt-10 grid grid-cols-2 gap-8">
-                  <div>
+                  <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
                     <p className="font-display text-5xl">5+</p>
                     <p className="mt-1 text-sm text-muted-foreground">Core analytics services</p>
                   </div>
-                  <div>
+                  <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
                     <p className="font-display text-5xl">8.98</p>
                     <p className="mt-1 text-sm text-muted-foreground">CGPA, First Class Distinction</p>
                   </div>
                 </div>
-              </div>
-              <div
-                className="rounded-3xl p-10"
-                style={{ backgroundImage: "var(--gradient-hero)" }}
+              </Reveal>
+              <Reveal
+                delay={120}
+                className="hover-lift rounded-3xl border border-border p-10"
               >
+                <div style={{ backgroundImage: "var(--gradient-hero)" }} className="-m-10 rounded-3xl p-10">
                 <ul className="space-y-5 text-sm">
                   <li className="flex gap-3">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
@@ -364,33 +369,35 @@ function Index() {
                     </a>
                   </li>
                 </ul>
-              </div>
+                </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
         <section id="experience" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Experience & skills</SectionTitle>
+            <SectionTitle eyebrow="Toolkit">Experience & skills</SectionTitle>
             <div className="mt-14 border-t border-border">
-              {SKILLS.map((s) => (
-                <div
-                  key={s.title}
-                  className="grid gap-4 border-b border-border py-7 md:grid-cols-[160px_1fr_1.2fr] md:items-center"
-                >
+              {SKILLS.map((s, i) => (
+                <Reveal key={s.title} delay={i * 80}>
+                <div className="group grid gap-4 border-b border-border px-2 py-7 transition-colors hover:bg-card/60 md:grid-cols-[160px_1fr_1.2fr] md:items-center">
                   <p className="text-sm text-muted-foreground">{s.years}</p>
-                  <p className="text-lg font-semibold">{s.title}</p>
+                  <p className="text-lg font-semibold transition-transform duration-300 group-hover:translate-x-1">
+                    {s.title}
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {s.items.map((i) => (
                       <Pill key={i}>{i}</Pill>
                     ))}
                   </div>
                 </div>
+                </Reveal>
               ))}
             </div>
 
             <div className="mt-14 grid gap-6 lg:grid-cols-2">
-              <div className="glass-card rounded-3xl p-8">
+              <Reveal className="glass-card rounded-3xl p-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Tenure completed
                 </p>
@@ -412,8 +419,8 @@ function Index() {
                     </li>
                   ))}
                 </ul>
-              </div>
-              <div className="glass-card rounded-3xl p-8">
+              </Reveal>
+              <Reveal delay={120} className="glass-card rounded-3xl p-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Education
                 </p>
@@ -429,19 +436,19 @@ function Index() {
                   <Pill>Class Representative</Pill>
                   <Pill>Student Mentor</Pill>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
         <section id="projects" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Recent projects</SectionTitle>
+            <SectionTitle eyebrow="Case studies">Recent projects</SectionTitle>
             <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {PROJECTS.map((p) => (
+              {PROJECTS.map((p, i) => (
+                <Reveal key={p.title} delay={i * 100} className="h-full">
                 <article
-                  key={p.title}
-                  className="flex flex-col rounded-3xl border border-border p-8"
+                  className="hover-lift flex h-full flex-col rounded-3xl border border-border p-8"
                   style={{ backgroundImage: "var(--gradient-hero)" }}
                 >
                   <span className="w-fit rounded-full bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-wider">
@@ -466,6 +473,7 @@ function Index() {
                     ))}
                   </dl>
                 </article>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -473,14 +481,15 @@ function Index() {
 
         <section id="contact" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Let’s work together</SectionTitle>
+            <SectionTitle eyebrow="Contact">Let’s work together</SectionTitle>
             <div className="mt-14 grid gap-6 lg:grid-cols-5">
+              <Reveal className="lg:col-span-3">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   setSent(true);
                 }}
-                className="space-y-4 rounded-3xl border border-border bg-card p-8 lg:col-span-3"
+                className="space-y-4 rounded-3xl border border-border bg-card/70 p-8 backdrop-blur"
               >
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Input required placeholder="Name" aria-label="Name" />
@@ -497,8 +506,10 @@ function Index() {
                   </p>
                 )}
               </form>
-              <div
-                className="space-y-5 rounded-3xl p-8 lg:col-span-2"
+              </Reveal>
+              <Reveal
+                delay={120}
+                className="hover-lift space-y-5 rounded-3xl border border-border p-8 lg:col-span-2"
                 style={{ backgroundImage: "var(--gradient-hero)" }}
               >
                 <a
@@ -523,7 +534,7 @@ function Index() {
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
                   Chittapur, Kalaburagi, Karnataka, India
                 </p>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
