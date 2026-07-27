@@ -96,11 +96,71 @@ const PROJECTS = [
   },
 ];
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+const MARQUEE = [
+  "SQL Server",
+  "Power BI",
+  "Python",
+  "DAX",
+  "Advanced Excel",
+  "Pandas",
+  "Statistics",
+  "Data Modeling",
+  "Executive Reporting",
+];
+
+function Reveal({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <h2 className="text-center font-display text-3xl uppercase leading-none md:text-5xl">
+    <div
+      ref={ref}
+      className={cn("reveal", visible && "is-visible", className)}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
       {children}
-    </h2>
+    </div>
+  );
+}
+
+function SectionTitle({ eyebrow, children }: { eyebrow?: string; children: React.ReactNode }) {
+  return (
+    <Reveal className="flex flex-col items-center">
+      {eyebrow && (
+        <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground backdrop-blur">
+          <Sparkles className="h-3 w-3 text-accent" />
+          {eyebrow}
+        </span>
+      )}
+      <h2 className="text-balance text-center font-display text-3xl uppercase leading-[0.95] md:text-5xl">
+        {children}
+      </h2>
+      <span className="mt-6 h-px w-24 bg-[image:var(--gradient-accent)]" />
+    </Reveal>
   );
 }
 
