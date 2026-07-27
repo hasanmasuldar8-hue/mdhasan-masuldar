@@ -174,10 +174,11 @@ function Pill({ children }: { children: React.ReactNode }) {
 
 function Index() {
   const [sent, setSent] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/70 backdrop-blur-xl">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
           <a href="#home" className="font-serif text-xl italic">
             Md Hasan.
@@ -187,17 +188,44 @@ function Index() {
               <li key={n}>
                 <a
                   href={`#${n.toLowerCase()}`}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="group relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {n}
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-[image:var(--gradient-accent)] transition-all duration-300 group-hover:w-full" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-center gap-2">
+            <Button asChild size="sm" className="rounded-full px-5">
+              <a href="#contact">Contact</a>
+            </Button>
+            <button
+              type="button"
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((o) => !o)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border lg:hidden"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
+        </nav>
+        {menuOpen && (
+          <ul className="border-t border-border bg-background/95 px-6 py-4 lg:hidden">
+            {NAV.map((n) => (
+              <li key={n}>
+                <a
+                  href={`#${n.toLowerCase()}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {n}
                 </a>
               </li>
             ))}
           </ul>
-          <Button asChild size="sm" className="rounded-full px-5">
-            <a href="#contact">Contact</a>
-          </Button>
-        </nav>
+        )}
       </header>
 
       <main>
@@ -206,15 +234,19 @@ function Index() {
           className="relative overflow-hidden pb-16 pt-16 md:pb-24 md:pt-20"
           style={{ backgroundImage: "var(--gradient-hero)" }}
         >
-          <div className="mx-auto w-full max-w-6xl px-6">
-            <p className="text-center font-serif text-6xl italic leading-none md:text-8xl">
+          <div className="pointer-events-none absolute inset-0 grain-grid opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_40%,black,transparent)]" />
+          <div className="relative mx-auto w-full max-w-6xl px-6">
+            <p className="text-gradient text-center font-serif text-6xl italic leading-none md:text-8xl">
               Hey, there
             </p>
 
             <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-xs font-medium shadow-[var(--shadow-glow)]">
-                  <span className="h-2 w-2 rounded-full bg-accent" />
+              <Reveal>
+                <span className="inline-flex items-center gap-2 rounded-full bg-card/80 px-4 py-2 text-xs font-medium shadow-[var(--shadow-glow)] backdrop-blur">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                  </span>
                   Available for new opportunities
                 </span>
                 <h1 className="mt-8 font-display text-6xl uppercase leading-[0.88] md:text-8xl">
@@ -222,8 +254,8 @@ function Index() {
                   <br />
                   Md Hasan
                 </h1>
-              </div>
-              <div className="md:max-w-xs">
+              </Reveal>
+              <Reveal delay={120} className="md:max-w-xs">
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   Specialized in SQL Server, Python, Power BI, statistical validation and
                   executive-ready reporting.
@@ -235,10 +267,32 @@ function Index() {
                   <br />
                   BI Specialist
                 </p>
-              </div>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button asChild size="lg" className="rounded-full px-6">
+                    <a href="#projects">View work</a>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="rounded-full px-6">
+                    <a href="#contact">Get in touch</a>
+                  </Button>
+                </div>
+              </Reveal>
             </div>
           </div>
         </section>
+
+        <div className="overflow-hidden border-y border-border bg-card/40 py-4">
+          <div className="marquee-track gap-10 whitespace-nowrap">
+            {[...MARQUEE, ...MARQUEE].map((m, i) => (
+              <span
+                key={`${m}-${i}`}
+                className="flex items-center gap-10 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground"
+              >
+                {m}
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              </span>
+            ))}
+          </div>
+        </div>
 
         <section id="services" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
