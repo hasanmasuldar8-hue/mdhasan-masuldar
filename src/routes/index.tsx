@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Linkedin, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, Linkedin, MapPin, ArrowUpRight, Menu, X, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const TITLE = "Md Hasan — Data Analyst & Business Intelligence Specialist";
 const DESC =
