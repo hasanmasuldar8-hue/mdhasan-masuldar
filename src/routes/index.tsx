@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Linkedin, MapPin, ArrowUpRight } from "lucide-react";
+import { Mail, Linkedin, MapPin, ArrowUpRight, Menu, X, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const TITLE = "Md Hasan — Data Analyst & Business Intelligence Specialist";
 const DESC =
@@ -95,11 +96,73 @@ const PROJECTS = [
   },
 ];
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+const MARQUEE = [
+  "SQL Server",
+  "Power BI",
+  "Python",
+  "DAX",
+  "Advanced Excel",
+  "Pandas",
+  "Statistics",
+  "Data Modeling",
+  "Executive Reporting",
+];
+
+function Reveal({
+  children,
+  className,
+  delay = 0,
+  style,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <h2 className="text-center font-display text-3xl uppercase leading-none md:text-5xl">
+    <div
+      ref={ref}
+      className={cn("reveal", visible && "is-visible", className)}
+      style={{ transitionDelay: `${delay}ms`, ...style }}
+    >
       {children}
-    </h2>
+    </div>
+  );
+}
+
+function SectionTitle({ eyebrow, children }: { eyebrow?: string; children: React.ReactNode }) {
+  return (
+    <Reveal className="flex flex-col items-center">
+      {eyebrow && (
+        <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground backdrop-blur">
+          <Sparkles className="h-3 w-3 text-accent" />
+          {eyebrow}
+        </span>
+      )}
+      <h2 className="text-balance text-center font-display text-3xl uppercase leading-[0.95] md:text-5xl">
+        {children}
+      </h2>
+      <span className="mt-6 h-px w-24 bg-[image:var(--gradient-accent)]" />
+    </Reveal>
   );
 }
 
@@ -113,10 +176,11 @@ function Pill({ children }: { children: React.ReactNode }) {
 
 function Index() {
   const [sent, setSent] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/70 backdrop-blur-xl">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
           <a href="#home" className="font-serif text-xl italic">
             Md Hasan.
@@ -126,17 +190,44 @@ function Index() {
               <li key={n}>
                 <a
                   href={`#${n.toLowerCase()}`}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="group relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {n}
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-[image:var(--gradient-accent)] transition-all duration-300 group-hover:w-full" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-center gap-2">
+            <Button asChild size="sm" className="rounded-full px-5">
+              <a href="#contact">Contact</a>
+            </Button>
+            <button
+              type="button"
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((o) => !o)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border lg:hidden"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
+        </nav>
+        {menuOpen && (
+          <ul className="border-t border-border bg-background/95 px-6 py-4 lg:hidden">
+            {NAV.map((n) => (
+              <li key={n}>
+                <a
+                  href={`#${n.toLowerCase()}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {n}
                 </a>
               </li>
             ))}
           </ul>
-          <Button asChild size="sm" className="rounded-full px-5">
-            <a href="#contact">Contact</a>
-          </Button>
-        </nav>
+        )}
       </header>
 
       <main>
@@ -145,15 +236,19 @@ function Index() {
           className="relative overflow-hidden pb-16 pt-16 md:pb-24 md:pt-20"
           style={{ backgroundImage: "var(--gradient-hero)" }}
         >
-          <div className="mx-auto w-full max-w-6xl px-6">
-            <p className="text-center font-serif text-6xl italic leading-none md:text-8xl">
+          <div className="pointer-events-none absolute inset-0 grain-grid opacity-40 [mask-image:radial-gradient(70%_60%_at_50%_40%,black,transparent)]" />
+          <div className="relative mx-auto w-full max-w-6xl px-6">
+            <p className="text-gradient text-center font-serif text-6xl italic leading-none md:text-8xl">
               Hey, there
             </p>
 
             <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
-              <div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-xs font-medium shadow-[var(--shadow-glow)]">
-                  <span className="h-2 w-2 rounded-full bg-accent" />
+              <Reveal>
+                <span className="inline-flex items-center gap-2 rounded-full bg-card/80 px-4 py-2 text-xs font-medium shadow-[var(--shadow-glow)] backdrop-blur">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                  </span>
                   Available for new opportunities
                 </span>
                 <h1 className="mt-8 font-display text-6xl uppercase leading-[0.88] md:text-8xl">
@@ -161,8 +256,8 @@ function Index() {
                   <br />
                   Md Hasan
                 </h1>
-              </div>
-              <div className="md:max-w-xs">
+              </Reveal>
+              <Reveal delay={120} className="md:max-w-xs">
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   Specialized in SQL Server, Python, Power BI, statistical validation and
                   executive-ready reporting.
@@ -174,21 +269,47 @@ function Index() {
                   <br />
                   BI Specialist
                 </p>
-              </div>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button asChild size="lg" className="rounded-full px-6">
+                    <a href="#projects">View work</a>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="rounded-full px-6">
+                    <a href="#contact">Get in touch</a>
+                  </Button>
+                </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
+        <div className="overflow-hidden border-y border-border bg-card/40 py-4">
+          <div className="marquee-track gap-10 whitespace-nowrap">
+            {[...MARQUEE, ...MARQUEE].map((m, i) => (
+              <span
+                key={`${m}-${i}`}
+                className="flex items-center gap-10 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground"
+              >
+                {m}
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              </span>
+            ))}
+          </div>
+        </div>
+
         <section id="services" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>I can help you with</SectionTitle>
-            <div className="mt-14 grid gap-px overflow-hidden border-border md:grid-cols-3 lg:grid-cols-5">
-              {SERVICES.map((s) => (
-                <div key={s.n} className="border-l border-border px-5 py-2 first:border-l-0">
-                  <p className="font-display text-4xl text-muted-foreground/25">{s.n}</p>
-                  <h3 className="mt-5 text-base font-semibold">{s.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
-                </div>
+            <SectionTitle eyebrow="Services">I can help you with</SectionTitle>
+            <div className="mt-14 grid gap-4 md:grid-cols-3 lg:grid-cols-5">
+              {SERVICES.map((s, i) => (
+                <Reveal key={s.n} delay={i * 80}>
+                  <div className="group hover-lift h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
+                    <p className="font-display text-4xl text-muted-foreground/25 transition-colors group-hover:text-accent/70">
+                      {s.n}
+                    </p>
+                    <h3 className="mt-5 text-base font-semibold">{s.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -196,9 +317,9 @@ function Index() {
 
         <section id="about" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Turning data into decisions</SectionTitle>
+            <SectionTitle eyebrow="About">Turning data into decisions</SectionTitle>
             <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:items-center">
-              <div>
+              <Reveal>
                 <p className="text-lg leading-relaxed text-muted-foreground">
                   I’m a Data Analyst who loves solving data puzzles — extracting structured datasets
                   with SQL Server, manipulating raw files with Python, and validating trends with
@@ -207,18 +328,19 @@ function Index() {
                   challenges.
                 </p>
                 <div className="mt-10 grid grid-cols-2 gap-8">
-                  <div>
+                  <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
                     <p className="font-display text-5xl">5+</p>
                     <p className="mt-1 text-sm text-muted-foreground">Core analytics services</p>
                   </div>
-                  <div>
+                  <div className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
                     <p className="font-display text-5xl">8.98</p>
                     <p className="mt-1 text-sm text-muted-foreground">CGPA, First Class Distinction</p>
                   </div>
                 </div>
-              </div>
-              <div
-                className="rounded-3xl p-10"
+              </Reveal>
+              <Reveal
+                delay={120}
+                className="hover-lift rounded-3xl border border-border p-10"
                 style={{ backgroundImage: "var(--gradient-hero)" }}
               >
                 <ul className="space-y-5 text-sm">
@@ -249,33 +371,34 @@ function Index() {
                     </a>
                   </li>
                 </ul>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
         <section id="experience" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Experience & skills</SectionTitle>
+            <SectionTitle eyebrow="Toolkit">Experience & skills</SectionTitle>
             <div className="mt-14 border-t border-border">
-              {SKILLS.map((s) => (
-                <div
-                  key={s.title}
-                  className="grid gap-4 border-b border-border py-7 md:grid-cols-[160px_1fr_1.2fr] md:items-center"
-                >
+              {SKILLS.map((s, i) => (
+                <Reveal key={s.title} delay={i * 80}>
+                <div className="group grid gap-4 border-b border-border px-2 py-7 transition-colors hover:bg-card/60 md:grid-cols-[160px_1fr_1.2fr] md:items-center">
                   <p className="text-sm text-muted-foreground">{s.years}</p>
-                  <p className="text-lg font-semibold">{s.title}</p>
+                  <p className="text-lg font-semibold transition-transform duration-300 group-hover:translate-x-1">
+                    {s.title}
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {s.items.map((i) => (
                       <Pill key={i}>{i}</Pill>
                     ))}
                   </div>
                 </div>
+                </Reveal>
               ))}
             </div>
 
             <div className="mt-14 grid gap-6 lg:grid-cols-2">
-              <div className="glass-card rounded-3xl p-8">
+              <Reveal className="glass-card rounded-3xl p-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Tenure completed
                 </p>
@@ -297,8 +420,8 @@ function Index() {
                     </li>
                   ))}
                 </ul>
-              </div>
-              <div className="glass-card rounded-3xl p-8">
+              </Reveal>
+              <Reveal delay={120} className="glass-card rounded-3xl p-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   Education
                 </p>
@@ -314,19 +437,19 @@ function Index() {
                   <Pill>Class Representative</Pill>
                   <Pill>Student Mentor</Pill>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
 
         <section id="projects" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Recent projects</SectionTitle>
+            <SectionTitle eyebrow="Case studies">Recent projects</SectionTitle>
             <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {PROJECTS.map((p) => (
+              {PROJECTS.map((p, i) => (
+                <Reveal key={p.title} delay={i * 100} className="h-full">
                 <article
-                  key={p.title}
-                  className="flex flex-col rounded-3xl border border-border p-8"
+                  className="hover-lift flex h-full flex-col rounded-3xl border border-border p-8"
                   style={{ backgroundImage: "var(--gradient-hero)" }}
                 >
                   <span className="w-fit rounded-full bg-card px-3 py-1 text-[11px] font-semibold uppercase tracking-wider">
@@ -351,6 +474,7 @@ function Index() {
                     ))}
                   </dl>
                 </article>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -358,14 +482,15 @@ function Index() {
 
         <section id="contact" className="scroll-mt-20 border-t border-border py-20 md:py-28">
           <div className="mx-auto w-full max-w-6xl px-6">
-            <SectionTitle>Let’s work together</SectionTitle>
+            <SectionTitle eyebrow="Contact">Let’s work together</SectionTitle>
             <div className="mt-14 grid gap-6 lg:grid-cols-5">
+              <Reveal className="lg:col-span-3">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   setSent(true);
                 }}
-                className="space-y-4 rounded-3xl border border-border bg-card p-8 lg:col-span-3"
+                className="space-y-4 rounded-3xl border border-border bg-card/70 p-8 backdrop-blur"
               >
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Input required placeholder="Name" aria-label="Name" />
@@ -382,8 +507,10 @@ function Index() {
                   </p>
                 )}
               </form>
-              <div
-                className="space-y-5 rounded-3xl p-8 lg:col-span-2"
+              </Reveal>
+              <Reveal
+                delay={120}
+                className="hover-lift space-y-5 rounded-3xl border border-border p-8 lg:col-span-2"
                 style={{ backgroundImage: "var(--gradient-hero)" }}
               >
                 <a
@@ -408,7 +535,7 @@ function Index() {
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
                   Chittapur, Kalaburagi, Karnataka, India
                 </p>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
