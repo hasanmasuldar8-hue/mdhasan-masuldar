@@ -371,7 +371,6 @@ function Index() {
                     </a>
                   </li>
                 </ul>
-                </div>
               </Reveal>
             </div>
           </div>
