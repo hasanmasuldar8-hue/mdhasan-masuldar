@@ -341,8 +341,8 @@ function Index() {
               <Reveal
                 delay={120}
                 className="hover-lift rounded-3xl border border-border p-10"
+                style={{ backgroundImage: "var(--gradient-hero)" }}
               >
-                <div style={{ backgroundImage: "var(--gradient-hero)" }} className="-m-10 rounded-3xl p-10">
                 <ul className="space-y-5 text-sm">
                   <li className="flex gap-3">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
