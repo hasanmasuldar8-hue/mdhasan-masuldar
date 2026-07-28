@@ -505,26 +505,44 @@ function Index() {
             <div className="mt-14 grid gap-6 lg:grid-cols-5">
               <Reveal className="lg:col-span-3">
               <form
-                onSubmit={(e) => {
+                ref={formRef}
+                onSubmit={async (e) => {
                   e.preventDefault();
-                  setSent(true);
+                  if (!formRef.current) return;
+                  setSending(true);
+                  setError(null);
+                  try {
+                    await emailjs.sendForm(
+                      EMAILJS_SERVICE_ID,
+                      EMAILJS_TEMPLATE_ID,
+                      formRef.current,
+                      { publicKey: EMAILJS_PUBLIC_KEY },
+                    );
+                    setSent(true);
+                    formRef.current.reset();
+                  } catch {
+                    setError("Something went wrong. Please email me directly.");
+                  } finally {
+                    setSending(false);
+                  }
                 }}
                 className="space-y-4 rounded-3xl border border-border bg-card/70 p-8 backdrop-blur"
               >
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Input required placeholder="Name" aria-label="Name" />
-                  <Input required type="email" placeholder="Email" aria-label="Email" />
+                  <Input required name="from_name" placeholder="Name" aria-label="Name" maxLength={100} />
+                  <Input required name="reply_to" type="email" placeholder="Email" aria-label="Email" maxLength={255} />
                 </div>
-                <Input required placeholder="Subject" aria-label="Subject" />
-                <Textarea required rows={5} placeholder="Message" aria-label="Message" />
-                <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto">
-                  Send Message
+                <Input required name="subject" placeholder="Subject" aria-label="Subject" maxLength={150} />
+                <Textarea required name="message" rows={5} placeholder="Message" aria-label="Message" maxLength={2000} />
+                <Button type="submit" size="lg" disabled={sending} className="w-full rounded-full sm:w-auto">
+                  {sending ? "Sending…" : "Send Message"}
                 </Button>
                 {sent && (
                   <p className="text-sm text-muted-foreground">
-                    Thanks — your message is ready to send. I’ll get back to you shortly.
+                    Thanks — your message has been sent. I’ll get back to you shortly.
                   </p>
                 )}
+                {error && <p className="text-sm text-destructive">{error}</p>}
               </form>
               </Reveal>
               <Reveal
