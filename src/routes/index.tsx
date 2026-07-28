@@ -512,10 +512,26 @@ function Index() {
                   setSending(true);
                   setError(null);
                   try {
-                    await emailjs.sendForm(
+                    const fd = new FormData(formRef.current);
+                    const name = String(fd.get("from_name") ?? "");
+                    const email = String(fd.get("reply_to") ?? "");
+                    const subject = String(fd.get("subject") ?? "");
+                    const message = String(fd.get("message") ?? "");
+                    await emailjs.send(
                       EMAILJS_SERVICE_ID,
                       EMAILJS_TEMPLATE_ID,
-                      formRef.current,
+                      {
+                        // common alias names so any EmailJS template picks these up
+                        from_name: name,
+                        name,
+                        user_name: name,
+                        reply_to: email,
+                        from_email: email,
+                        email,
+                        user_email: email,
+                        subject,
+                        message,
+                      },
                       { publicKey: EMAILJS_PUBLIC_KEY },
                     );
                     setSent(true);
