@@ -251,11 +251,21 @@ function Index() {
                   </span>
                   Available for new opportunities
                 </span>
-                <h1 className="mt-8 font-display text-6xl uppercase leading-[0.88] md:text-8xl">
-                  I am
-                  <br />
-                  Md Hasan
-                </h1>
+                <div className="mt-8 flex items-start gap-5 md:gap-8">
+                  <div className="relative shrink-0">
+                    <div className="absolute -inset-1 rounded-full bg-[image:var(--gradient-accent)] opacity-40 blur-md" />
+                    <img
+                      src="https://i.postimg.cc/ZYWjm4bs/IMG-20260502-015811.jpg"
+                      alt="Md Hasan profile"
+                      className="relative h-24 w-24 rounded-full border-2 border-white object-cover shadow-xl md:h-36 md:w-36"
+                    />
+                  </div>
+                  <h1 className="font-display text-6xl uppercase leading-[0.88] md:text-8xl">
+                    I am
+                    <br />
+                    Md Hasan
+                  </h1>
+                </div>
               </Reveal>
               <Reveal delay={120} className="md:max-w-xs">
                 <p className="text-sm leading-relaxed text-muted-foreground">
@@ -279,6 +289,7 @@ function Index() {
                 </div>
               </Reveal>
             </div>
+
           </div>
         </section>
 
