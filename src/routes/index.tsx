@@ -63,7 +63,7 @@ const SKILLS = [
   {
     years: "Visualization",
     title: "Business Intelligence",
-    items: ["Power BI", "DAX", "Star Schema", "Drill-Throughs", "NovyPro"],
+    items: ["Power BI", "DAX", "Star Schema", "Drill-Throughs"],
   },
   {
     years: "Reporting",
