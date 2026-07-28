@@ -5,6 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Linkedin, MapPin, ArrowUpRight, Menu, X, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_PUBLIC_KEY = "f9kRUlkR3LUFmZAPH";
+const EMAILJS_SERVICE_ID = "service_cswvmi9";
+const EMAILJS_TEMPLATE_ID = "template_oftkbfb";
 
 const TITLE = "Md Hasan — Data Analyst & Business Intelligence Specialist";
 const DESC =
@@ -176,6 +181,9 @@ function Pill({ children }: { children: React.ReactNode }) {
 
 function Index() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
